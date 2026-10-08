@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  error:
+    # Por defecto Spring Boot NO manda el mensaje real del error al cliente (sale
+    # "No message available" aunque el backend sí haya lanzado uno claro, como el
+    # de "no se puede eliminar esta prenda porque ya tiene pedidos"). Con esto,
+    # todos los mensajes de error que ya se escribieron en el backend sí llegan
+    # al panel de admin en vez de quedar atrapados en el log del servidor.
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-0-us-east-2.pooler.supabase.com:5432/postgres
+    username: postgres.laxewzgygfyfjitplfmo
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      # En desarrollo: update. En producción, usar migraciones (Flyway/Liquibase) y poner "validate".
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    # Nunca dejar este secreto real en el repositorio; se debe pasar por variable de entorno APP_JWT_SECRET.
+    secret: ${APP_JWT_SECRET:cambia-este-secreto-en-produccion-por-uno-largo-y-aleatorio}
+    expiracion-minutos: 60
+  fotos:
+    rembg-path: ${REMBG_PATH}
+    modelo: isnet-general-use
+  supabase:
+    storage:
+      url: ${SUPABASE_URL}
+      secret-key: ${SUPABASE_SECRET_KEY}
+      bucket: fotos-prendas
